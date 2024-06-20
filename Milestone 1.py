@@ -76,9 +76,9 @@ for book in books:
     #         if p['class'] == 'star':
     #             scrape_review_rating = soup.select('p.star-rating ')
     #             table_data['review_rating'] = "scrape_review_rating"
-    # Write it all to CSV file
 
 
+# Write it all to a CSV file
     # with open('results.csv', 'w', newline="") as f:
     #     writer = csv.DictWriter(f, delimiter=",", fieldnames=csvColumns)
     #     writer.writeheader()
@@ -86,12 +86,11 @@ for book in books:
     #         f.writerow(table_data)
     #         # this just writes a single line. . .
 
-    # with open('results.csv', 'w', errors='replace') as csvFile:
-    #     writer = csv.DictWriter(csvFile, delimiter=";", fieldnames=table_data.keys())
-    #     writer.writeheader()
-    #     for data in table_data:
-    #         writer.writerow(table_data)
-            # this just prints the same row on repeat with stupid formatting. . .
-
     with open('results.csv', 'w', errors='replace') as csvFile:
-        writer = csv.writer(csvFile, delimiter = ',')
+        writer = csv.DictWriter(csvFile, delimiter=";", fieldnames=table_data.keys())
+        writer.writeheader()
+        for data in table_data:
+            writer.writerow(table_data)
+            #this just prints the same row on repeat with stupid formatting. . .
+
+
