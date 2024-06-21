@@ -19,13 +19,11 @@ import csv
 
 # Create a dictionary to hold the data
 table_data = {}
-field_names = 'product_page_url', 'UPC', 'Product Type', 'Price (excl. tax)', 'Price (incl. tax)', 'Tax', 'Availability'
-field_names = field_names, 'Number of reviews', 'book_title', 'image_url', 'product_description'
 
 # Navigate to the site index and pull site_soup
 root_url = "https://books.toscrape.com/index.html"
 response = requests.get(root_url)
-print(response.encoding)
+# print(response.encoding)
 site_soup = BeautifulSoup(response.text, "html.parser")
 
 # Reset the root_url, so it's compatible with book_url
@@ -41,56 +39,91 @@ for book in books:
     # Go to the book page and scrape the data
     book_soup = BeautifulSoup(requests.get(book_url_full).text, "html.parser")
 
-    # find the table of data on the book page
-    Information_Table = book_soup.find("table")
-
-    # Extract the data from the book page's table
-    n = 0
-    for label_itm in Information_Table.findAll("th"):
-        value_item = Information_Table.select('td')[n].text
-        table_data[label_itm.text] = value_item
-        n += 1
-
-    # Extract the book title
-    book_title = book_soup.find("h1").text
-    table_data['book_title'] = book_title
-
-    # Extract the image URL
-    image_url = book_soup.find("img")["src"]
-    table_data['image_url'] = image_url
-
-    # Extract the product description (assumption: descriptions will be more _
-    # than 60 characters; other targets not usable because aren't as long)
-    for product_description in book_soup.find_all("p"):
-        if len(product_description.text) > 60:
-            product_description = product_description.text
-            table_data['product_description'] = product_description
-
-    print(table_data)  # [this prints out all the data I want. . . why doesn't it print to CSV?]
-    # print(table_data.keys())  # this prints out just the fields within the dictionary.
+    # # find the table of data on the book page
+    # Information_Table = book_soup.find("table")
+    #
+    # # Extract the data from the book page's table
+    # n = 0
+    # for label_itm in Information_Table.findAll("th"):
+    #     value_item = Information_Table.select('td')[n].text
+    #     table_data[label_itm.text] = value_item
+    #     n += 1
+    #
+    # # Extract the book title
+    # book_title = book_soup.find("h1").text
+    # table_data['book_title'] = book_title
+    #
+    # # Extract the image URL
+    # image_url = book_soup.find("img")["src"]
+    # table_data['image_url'] = image_url
+    #
+    # # Extract the product description (assumption: descriptions will be more _
+    # # than 60 characters; other targets not usable because aren't as long)
+    # for product_description in book_soup.find_all("p"):
+    #     if len(product_description.text) > 60:
+    #         product_description = product_description.text
+    #         table_data['product_description'] = product_description
 
     # Extract the Star Rating
-    # Gotta work on this one a bit. . .
     # for p in book_soup.find_all("p"):
-    #     for item in p.find_all(class_=''star-rating")
+    #     for item in p.find_all(class_=''star-rating"):
     #         if p['class'] == 'star':
-    #             scrape_review_rating = soup.select('p.star-rating ')
+    #             scrape_review_rating = item.select('p.star-rating ')
     #             table_data['review_rating'] = "scrape_review_rating"
+    # Returns multiple errors: Gotta work on this one a bit. . .
 
+    for rating in book_soup.find_all("p"):
+        rating_2 = rating.__class__
+        print(rating_2)
+        # this currently prints class 'bs4.element.Tag' which doesn't seem right.
 
-# Write it all to a CSV file
+# print(table_data)  # [this prints out all the data I want. . . why doesn't it print to CSV?]
+# print(table_data.keys())  # this prints out just the fields within the dictionary.
+
+#    #Write it all to a CSV file
+#     with open('results.csv', 'w', newline="") as f:
+#         writer = csv.DictWriter(f, delimiter=",", fieldnames=table_data.keys())
+#         writer.writeheader()
+#         for data in table_data:
+#             writer.writerow(data)
+#             # this doesn't write at all. . . .
+
     # with open('results.csv', 'w', newline="") as f:
-    #     writer = csv.DictWriter(f, delimiter=",", fieldnames=csvColumns)
+    #     writer = csv.DictWriter(f, delimiter=",", fieldnames=table_data.keys())
     #     writer.writeheader()
     #     for data in table_data:
-    #         f.writerow(table_data)
-    #         # this just writes a single line. . .
+    #         writer.writerow(table_data)
+    #         # this writes just the headers and nothing else.
 
-    with open('results.csv', 'w', errors='replace') as csvFile:
-        writer = csv.DictWriter(csvFile, delimiter=";", fieldnames=table_data.keys())
-        writer.writeheader()
-        for data in table_data:
-            writer.writerow(table_data)
-            #this just prints the same row on repeat with stupid formatting. . .
+    # with open('results.csv', 'w', newline="") as f:
+    #     writer = csv.DictWriter(f, delimiter=",", fieldnames=table_data.keys())
+    #     writer.writeheader()
+    #     for data in table_data:
+    #         writer.writerow(data)
+    #         # this doesn't work at all. . .error to follow
+    #         # Expected type 'Mapping[str, Any]' (matched generic type 'Mapping[_T, Any]'), got 'str' instead
 
+# with open('results.csv', 'w', errors='replace') as csvFile:
+#     writer = csv.DictWriter(csvFile, delimiter=";", fieldnames=table_data.keys())
+#     writer.writeheader()
+#     for data in table_data:
+#         writer.writerow(table_data)
+#         # this just prints the same row on repeat with stupid formatting. . .
+#         # in this version, I tried using DictWriter.
 
+# with open('results.csv', 'w', errors='replace', newline="") as csvFile:
+#     writer = csv.DictWriter(csvFile, delimiter=",", fieldnames=table_data.keys())
+#     writer.writeheader()
+#     for data in table_data:
+#         writer.writerow(table_data)
+#           # this prints the same row on repeat with improved formatting...
+#           # In this version, I changed delimiter to a comma.
+
+# with open('results.csv', 'w', errors='replace', newline="") as csvFile:
+#     writer = csv.DictWriter(csvFile, delimiter=",", fieldnames=table_data.keys())
+#     writer.writeheader()
+#     for data in table_data:
+#         writer.writerow(data)
+#         # In this version, I changed writer.writerow(table_data) to writer.writerow(data)
+#         # Result: Error at line 108 (the line I changed): Expected type
+#         # 'Mapping[str, Any]' (matched generic type 'Mapping[_T, Any]'), got 'str' instead
