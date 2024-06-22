@@ -21,7 +21,7 @@ import csv
 book_dict_list = []
 book_number = 1
 
-table_data = dict()
+
 
 # Navigate to the site index and pull site_soup
 root_url = "https://books.toscrape.com/index.html"
@@ -35,6 +35,7 @@ root_url = "https://books.toscrape.com/"
 # Visit each of the pages and capture individual data
 books = site_soup.find_all('li', class_="col-xs-6 col-sm-4 col-md-3 col-lg-3")
 for book in books:
+    table_data = dict()
     book_url = book.find('a')['href']
     book_url_full = root_url + book_url
     table_data['product_page_url'] = book_url_full
@@ -85,22 +86,22 @@ for book in books:
         else: rating_int = 'whoops'
     table_data['rating'] = rating_int
 
-# Extract the Category
-for category in book_soup.find_all('ul', class_ = 'breadcrumb'):
-    for li in category.find_all("a"):
-        category2 = li.text
-        table_data['category'] = category2
+    # Extract the Category
+    for category in book_soup.find_all('ul', class_ = 'breadcrumb'):
+        for li in category.find_all("a"):
+            category2 = li.text
+            table_data['category'] = category2
 
-# append the book dictionary to the list of dictionaries
+    # append the book dictionary to the list of dictionaries
     book_dict_list.append(table_data)
 
 # print(table_data)  # [this prints out all the data I want. . . why doesn't it print to CSV?]
 # print(table_data.keys())  # this prints out just the fields within the dictionary.
+print(book_dict_list)
+print(book_dict_list.__len__())
 
 with open('results.csv', 'w', errors='replace', newline="") as csvFile:
     writer = csv.DictWriter(csvFile, delimiter=",", fieldnames=table_data.keys())
     writer.writeheader()
-    for book_dict in book_dict_list:
-        writer.writerow(book_dict)
-      # this prints the same row on repeat with improved formatting...
-      # In this version, I changed delimiter to a comma.
+    for data in book_dict_list:
+        writer.writerow(data)
