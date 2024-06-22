@@ -10,15 +10,18 @@
 # DONE ● category
 # DONE ● review_rating
 # DONE ● image_url
-# ● category
+# DONE ● category
 # Write the data to a CSV file using the above fields as column headings.
 
 from bs4 import BeautifulSoup
 import requests
 import csv
 
-# Create a dictionary to hold the data
-table_data = {}
+# Create a list to hold the dictionaries
+book_dict_list = []
+book_number = 1
+
+table_data = dict()
 
 # Navigate to the site index and pull site_soup
 root_url = "https://books.toscrape.com/index.html"
@@ -82,53 +85,22 @@ for book in books:
         else: rating_int = 'whoops'
     table_data['rating'] = rating_int
 
-print(table_data)  # [this prints out all the data I want. . . why doesn't it print to CSV?]
+# Extract the Category
+for category in book_soup.find_all('ul', class_ = 'breadcrumb'):
+    for li in category.find_all("a"):
+        category2 = li.text
+        table_data['category'] = category2
+
+# append the book dictionary to the list of dictionaries
+    book_dict_list.append(table_data)
+
+# print(table_data)  # [this prints out all the data I want. . . why doesn't it print to CSV?]
 # print(table_data.keys())  # this prints out just the fields within the dictionary.
-
-#    #Write it all to a CSV file
-#     with open('results.csv', 'w', newline="") as f:
-#         writer = csv.DictWriter(f, delimiter=",", fieldnames=table_data.keys())
-#         writer.writeheader()
-#         for data in table_data:
-#             writer.writerow(data)
-#             # this doesn't write at all. . . .
-
-    # with open('results.csv', 'w', newline="") as f:
-    #     writer = csv.DictWriter(f, delimiter=",", fieldnames=table_data.keys())
-    #     writer.writeheader()
-    #     for data in table_data:
-    #         writer.writerow(table_data)
-    #         # this writes just the headers and nothing else.
-
-    # with open('results.csv', 'w', newline="") as f:
-    #     writer = csv.DictWriter(f, delimiter=",", fieldnames=table_data.keys())
-    #     writer.writeheader()
-    #     for data in table_data:
-    #         writer.writerow(data)
-    #         # this doesn't work at all. . .error to follow
-    #         # Expected type 'Mapping[str, Any]' (matched generic type 'Mapping[_T, Any]'), got 'str' instead
-
-# with open('results.csv', 'w', errors='replace') as csvFile:
-#     writer = csv.DictWriter(csvFile, delimiter=";", fieldnames=table_data.keys())
-#     writer.writeheader()
-#     for data in table_data:
-#         writer.writerow(table_data)
-#         # this just prints the same row on repeat with stupid formatting. . .
-#         # in this version, I tried using DictWriter.
 
 with open('results.csv', 'w', errors='replace', newline="") as csvFile:
     writer = csv.DictWriter(csvFile, delimiter=",", fieldnames=table_data.keys())
     writer.writeheader()
-    for data in table_data:
-        writer.writerow(table_data)
-          # this prints the same row on repeat with improved formatting...
-          # In this version, I changed delimiter to a comma.
-
-# with open('results.csv', 'w', errors='replace', newline="") as csvFile:
-#     writer = csv.DictWriter(csvFile, delimiter=",", fieldnames=table_data.keys())
-#     writer.writeheader()
-#     for data in table_data:
-#         writer.writerow(data)
-#         # In this version, I changed writer.writerow(table_data) to writer.writerow(data)
-#         # Result: Error at line 108 (the line I changed): Expected type
-#         # 'Mapping[str, Any]' (matched generic type 'Mapping[_T, Any]'), got 'str' instead
+    for book_dict in book_dict_list:
+        writer.writerow(book_dict)
+      # this prints the same row on repeat with improved formatting...
+      # In this version, I changed delimiter to a comma.
