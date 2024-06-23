@@ -15,9 +15,13 @@
 
 from bs4 import BeautifulSoup
 import requests
+import time
 import math
 import csv
+start_time = time.time()
 
+# Give the user a message
+print("The scrape has commenced!")
 # Create a list to hold the dictionaries
 book_dict_list = []
 
@@ -35,10 +39,11 @@ current_page = math.trunc(int(site_soup.find("form").text.split(' ')[6].replace(
 if current_page == 1:
     next_page = 1
 
-while current_page <= 3: #typically would have this be total_page rather than 3, but want to limit run time
+while current_page <= total_page:  # for the full run, this should be changed to total_page
     if current_page > 1:
         page_url = f'{root_url}catalogue/page-{next_page}.html'
-    else: page_url = root_url
+    else:
+        page_url = root_url
 
     response = requests.get(page_url)
     page_soup = BeautifulSoup(response.text, "html.parser")
@@ -47,7 +52,10 @@ while current_page <= 3: #typically would have this be total_page rather than 3,
     for book in books:
         table_data = dict()
         book_url = book.find('a')['href']
-        book_url_full = root_url + book_url
+        if "catalogue" in book_url:
+            book_url_full = root_url + book_url
+        else:
+            book_url_full = root_url + 'catalogue/' + book_url
         table_data['product_page_url'] = book_url_full
 
         # Go to the book page and scrape the data
@@ -55,6 +63,9 @@ while current_page <= 3: #typically would have this be total_page rather than 3,
 
         # find the table of data on the book page
         Information_Table = book_soup.find("table")
+        if Information_Table is None:
+            print("Information table not found")
+            exit()
 
         # Extract the data from the book page's table
         n = 0
@@ -93,7 +104,8 @@ while current_page <= 3: #typically would have this be total_page rather than 3,
                 rating_int = int(rating_str.replace("Four", '4'))
             elif rating_str == 'Five':
                 rating_int = int(rating_str.replace("Five", '5'))
-            else: rating_int = 'whoops'
+            else:
+                rating_int = 'whoops'
         table_data['rating'] = rating_int
 
         # Extract the Category
@@ -105,8 +117,11 @@ while current_page <= 3: #typically would have this be total_page rather than 3,
         # append the book dictionary to the list of dictionaries
         book_dict_list.append(table_data)
 
-    #iterate to the next page of books
-    current_page = next_page
+    # iterate to the next page of books
+    end_time = time.time()
+    elapsed_time = int(end_time) - int(start_time)
+    books_scraped = len(book_dict_list)
+    print(f' {books_scraped} book scrapes completed after: {elapsed_time} seconds')
     next_page = next_page + 1
     current_page = next_page
 
@@ -121,6 +136,4 @@ with open('results.csv', 'w', errors='replace', newline="") as csvFile:
     writer.writeheader()
     for data in book_dict_list:
         writer.writerow(data)
-        print('scraping is complete')
-
-
+    print('The requested scrape is now complete')
