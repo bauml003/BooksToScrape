@@ -39,7 +39,7 @@ current_page = math.trunc(int(site_soup.find("form").text.split(' ')[6].replace(
 if current_page == 1:
     next_page = 1
 
-while current_page <= total_page:  # for the full run, this should be changed to total_page
+while current_page <= 2:  # for the full run, this should be changed to total_page
     if current_page > 1:
         page_url = f'{root_url}catalogue/page-{next_page}.html'
     else:
@@ -79,7 +79,7 @@ while current_page <= total_page:  # for the full run, this should be changed to
         table_data['book_title'] = book_title
 
         # Extract the image URL
-        image_url = book_soup.find("img")["src"]
+        image_url = book_soup.find("img")["src"].replace("../../", "https://books.toscrape.com/")
         table_data['image_url'] = image_url
 
         # Extract the product description (assumption: descriptions will be more _
@@ -125,15 +125,11 @@ while current_page <= total_page:  # for the full run, this should be changed to
     next_page = next_page + 1
     current_page = next_page
 
+# results_all_categories = 'results.csv'
+# with open('results_all_categories', 'w', errors='replace', newline="") as csvFile:
+#     writer = csv.DictWriter(csvFile, delimiter=",", fieldnames=table_data.keys())
+#     writer.writeheader()
+#     for data in book_dict_list:
+#         writer.writerow(data)
 
-# print(table_data)  # [this prints out all the data I want. . . why doesn't it print to CSV?]
-# print(table_data.keys())  # this prints out just the fields within the dictionary.
-# print(book_dict_list)
-# print(book_dict_list.__len__())
-
-with open('results.csv', 'w', errors='replace', newline="") as csvFile:
-    writer = csv.DictWriter(csvFile, delimiter=",", fieldnames=table_data.keys())
-    writer.writeheader()
-    for data in book_dict_list:
-        writer.writerow(data)
-    print('The requested scrape is now complete')
+print('The requested scrape is now complete')
