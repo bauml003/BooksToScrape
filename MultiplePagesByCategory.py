@@ -57,7 +57,8 @@ for cat in cat1:
         total_page = int(pager[3])
         next_page = current_page + 1
 
-    # extract the number of
+    # locate the URL for the next pages
+    print(f'{strip_cat_text}: {total_page} pages of books')
     running = True
     current_done = False
     while running:
@@ -75,6 +76,7 @@ for cat in cat1:
             page_url = f'{cat_url}page-{next_page}.html'
             next_page += 1
 
+        # as long as we've found a url, extract the book data from it
         if page_url != "":
             response = requests.get(page_url)
             page_soup = BeautifulSoup(response.text, "html.parser")
@@ -153,11 +155,20 @@ for cat in cat1:
             end_time = time.time()
             elapsed_time = int(end_time) - int(start_time)
             books_scraped = len(book_dict_list)
-            print(f' {books_scraped} book scrapes completed after: {elapsed_time} seconds')
+            print(f'   {books_scraped} book scrapes completed after: {elapsed_time} seconds')
 
             # iterate to the next page of books
             if total_page > 1:
                 next_page = current_page + 1
                 current_page = next_page
 
-print('The requested scrape is now complete')
+    results_all_categories = f'{strip_cat_text}.csv'
+    with open(results_all_categories, 'w', errors='replace', newline="") as csvFile:
+        writer = csv.DictWriter(csvFile, delimiter=",", fieldnames=table_data.keys())
+        writer.writeheader()
+        for data in book_dict_list:
+            writer.writerow(data)
+
+final_time = int(time.time())-int(start_time)
+
+print(f'The requested scrape is now complete and output to <location> after {final_time} seconds')
