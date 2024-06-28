@@ -61,7 +61,7 @@ for category in book_soup.find_all('ul', class_ = 'breadcrumb'):
         category2 = li.text
         table_data['category'] = category2
 
-with open('results.csv', 'w', errors='replace', newline="") as csvFile:
+with open('SingleBook_results.csv', 'w', errors='replace', newline="") as csvFile:
     writer = csv.DictWriter(csvFile, delimiter=",", fieldnames=table_data.keys())
     writer.writeheader()
     writer.writerow(table_data)
