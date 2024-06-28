@@ -100,7 +100,7 @@ for book in books:
 # print(book_dict_list)
 # print(book_dict_list.__len__())
 
-with open('results.csv', 'w', errors='replace', newline="") as csvFile:
+with open('OnePage_results.csv', 'w', errors='replace', newline="") as csvFile:
     writer = csv.DictWriter(csvFile, delimiter=",", fieldnames=table_data.keys())
     writer.writeheader()
     for data in book_dict_list:
