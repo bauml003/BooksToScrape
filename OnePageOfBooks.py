@@ -97,8 +97,8 @@ for book in books:
 
 # print(table_data)  # [this prints out all the data I want. . . why doesn't it print to CSV?]
 # print(table_data.keys())  # this prints out just the fields within the dictionary.
-print(book_dict_list)
-print(book_dict_list.__len__())
+# print(book_dict_list)
+# print(book_dict_list.__len__())
 
 with open('results.csv', 'w', errors='replace', newline="") as csvFile:
     writer = csv.DictWriter(csvFile, delimiter=",", fieldnames=table_data.keys())

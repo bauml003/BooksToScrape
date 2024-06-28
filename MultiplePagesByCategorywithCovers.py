@@ -16,7 +16,7 @@
 from bs4 import BeautifulSoup
 import requests
 import time
-import math
+import re
 import csv
 
 start_time = time.time()
@@ -114,7 +114,9 @@ for cat in cat1:
 
                 # Extract the image URL
                 image_url = book_soup.find("img")["src"].replace("../../", "https://books.toscrape.com/")
-                table_data['image_url'] = image_url
+                image_response = requests.get(image_url)
+                image_itself = image_response.content
+
 
                 # Extract the product description (assumption: descriptions will be more _
                 # than 60 characters; other targets not usable because aren't as long)
@@ -149,6 +151,15 @@ for cat in cat1:
                         category2 = li.text
                         table_data['category'] = category2
 
+                # #clean the title
+                clean_book_title = re.sub("[^A-Z]", "", book_title,0,re.IGNORECASE)
+                clean_book_title = clean_book_title[:20]
+
+                # download the image file for the image
+                image_title = f'cover_images/{category2} - {clean_book_title}.jpg'
+                with open(image_title, "wb") as img:
+                    img.write(image_itself)
+
                 # append the book dictionary to the list of dictionaries
                 book_dict_list.append(table_data)
 
@@ -163,7 +174,7 @@ for cat in cat1:
                 next_page = current_page + 1
                 current_page = next_page
 
-    results_all_categories = f'{strip_cat_text}.csv'
+    results_all_categories = f'results/{strip_cat_text}.csv'
     with open(results_all_categories, 'w', errors='replace', newline="", encoding = 'utf-8') as csvFile:
         writer = csv.DictWriter(csvFile, delimiter=",", fieldnames=table_data.keys())
         writer.writeheader()
