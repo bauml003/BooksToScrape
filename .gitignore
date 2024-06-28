@@ -1,4 +1,4 @@
-.venv
+.env
 .idea
 
 /results.csv
@@ -1133,3 +1133,4 @@
 /cover_images/Young Adult - WhereSheWentIfIStay.jpg
 /cover_images/Young Adult - WildSwans.jpg
 /cover_images/Young Adult - WillGraysonWillGrays.jpg
+/env/
