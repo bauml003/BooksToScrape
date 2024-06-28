@@ -30,6 +30,7 @@ page_url = ""
 category2 = ""
 rating_int = ""
 table_data = {}
+encoding = 'ISO-8859-1'
 
 # Navigate to the site and pull site_soup
 root_url = "https://books.toscrape.com/"
@@ -99,6 +100,10 @@ for cat in cat1:
                 # Go to the book page and scrape the data
                 book_soup = BeautifulSoup(requests.get(book_url_full).text, "html.parser")
 
+                # Extract the book title
+                book_title = book_soup.find("h1").text
+                table_data['book_title'] = book_title
+
                 # find the table of data on the book page
                 Information_Table = book_soup.find("table")
                 if Information_Table is None:
@@ -108,13 +113,20 @@ for cat in cat1:
                 # Extract the data from the book page's table
                 n = 0
                 for label_itm in Information_Table.findAll("th"):
-                    value_item = Information_Table.select('td')[n].text
-                    table_data[label_itm.text] = value_item
-                    n += 1
-
-                # Extract the book title
-                book_title = book_soup.find("h1").text
-                table_data['book_title'] = book_title
+                    if label_itm.text == "Product Type":
+                        value_item = ""
+                        n += 1
+                    elif label_itm.text == "Number of Reviews":
+                        value_item = ""
+                        n += 1
+                    elif label_itm.text == "Tax":
+                        value_item = ""
+                        n += 1
+                    else:
+                        value_item = Information_Table.select('td')[n].text
+                        value_item = value_item.replace("In stock (", "").replace(" available)", "")
+                        table_data[label_itm.text] = value_item
+                        n += 1
 
                 # Extract the image URL
                 image_url = book_soup.find("img")["src"].replace("../../", "https://books.toscrape.com/")
