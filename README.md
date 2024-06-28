@@ -27,19 +27,29 @@ Instructions
 -
 To run this program, the user must have Python installed on their machine. 
 1. From the console (terminal) the user should clone this repository using: 
-git clone https://github.com/bauml003/BooksToScrape.git
+    ````
+    git clone https://github.com/bauml003/BooksToScrape.git
+    ````
 
 2. Within the cloned folder, create a virtual environment:
-python -m venv env
+    ```
+    python -m venv env
+    ```
 
 3. Activate the virtual environment in terminal:
-env\scripts\activate
+    ```
+    env\scripts\activate
+    ```
 
 4. Install the required packages
-pip install -r requirements.txt
+    ```
+    pip install -r requirements.txt
+    ```
 
-5. Run the script
-python MultiplePagesByCategorywithCovers.py
+5. Run the script by calling the following in the console: 
+    ```
+   python MultiplePagesByCategorywithCovers.py
+    ```
 
 6. Review the outputs of the program from the folder titled 'results' 
 7. Consult the folder titled cover_images for copies of the downloaded images 
