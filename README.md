@@ -18,7 +18,10 @@ The extracted data is as follows:
 
 The script also downloads the cover art for each of the scraped entities. 
 Each image file is named with the category to which it belongs as well as the name of the entity. 
-An example would be "Travel - ItsOnlytheHimalayas.jpg"
+An example would be "Travel - ItsOnlytheHimalayas.jpg."
+
+As the script runs, the console will display activity to demonstrate its progress. For instance, it will print "Crime: 1 pages of books" when it determines the number of pages of crime novels present. 
+Once the books on that page have finished being extracted, it will display the total count of books that have been extracted (example: "1000 book scrapes completed after: 542 seconds"). 
 
 Instructions
 -
