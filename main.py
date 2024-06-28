@@ -26,6 +26,10 @@ print("The scrape has commenced!")
 # Create a list to hold the dictionaries
 book_dict_list = []
 category_list = []
+page_url = ""
+category2 = ""
+rating_int = ""
+table_data = {}
 
 # Navigate to the site and pull site_soup
 root_url = "https://books.toscrape.com/"
@@ -41,7 +45,6 @@ for cat in cat1:
     cat_url = root_url + cat2
     response = requests.get(cat_url)
     cat_soup = BeautifulSoup(response.text, "html.parser")
-    print(strip_cat_text)
 
     # Determine the page number of current
     page = cat_soup.find('li', class_="current")
@@ -76,9 +79,10 @@ for cat in cat1:
             page_url = f'{cat_url}page-{next_page}.html'
             next_page += 1
 
-        # as long as we've found a url, extract the book data from it
+        # as long as we've found the url, extract the book data from it
         if page_url != "":
             response = requests.get(page_url)
+            encoding = response.encoding
             page_soup = BeautifulSoup(response.text, "html.parser")
             # Visit each of the book pages and capture individual data
             books = page_soup.find_all('li', class_="col-xs-6 col-sm-4 col-md-3 col-lg-3")
@@ -99,7 +103,7 @@ for cat in cat1:
                 Information_Table = book_soup.find("table")
                 if Information_Table is None:
                     print("Information table not found")
-                    exit()
+                    break
 
                 # Extract the data from the book page's table
                 n = 0
@@ -116,7 +120,7 @@ for cat in cat1:
                 image_url = book_soup.find("img")["src"].replace("../../", "https://books.toscrape.com/")
                 image_response = requests.get(image_url)
                 image_itself = image_response.content
-
+                table_data['image_url'] = image_url
 
                 # Extract the product description (assumption: descriptions will be more _
                 # than 60 characters; other targets not usable because aren't as long)
@@ -125,7 +129,8 @@ for cat in cat1:
                         product_description = product_description.text
                         table_data['product_description'] = product_description
                         break
-                    else: table_data['product_description'] = product_description
+                    else:
+                        table_data['product_description'] = product_description
 
                 # Extract the Star Rating
                 for rating in book_soup.find_all("p", class_="star-rating"):
@@ -152,7 +157,7 @@ for cat in cat1:
                         table_data['category'] = category2
 
                 # #clean the title
-                clean_book_title = re.sub("[^A-Z]", "", book_title,0,re.IGNORECASE)
+                clean_book_title = re.sub("[^A-Z]", "", book_title, 0, re.IGNORECASE)
                 clean_book_title = clean_book_title[:20]
 
                 # download the image file for the image
@@ -175,7 +180,7 @@ for cat in cat1:
                 current_page = next_page
 
     results_all_categories = f'results/{strip_cat_text}.csv'
-    with open(results_all_categories, 'w', errors='replace', newline="", encoding = 'utf-8') as csvFile:
+    with open(results_all_categories, 'w', errors='replace', newline="", encoding=encoding) as csvFile:
         writer = csv.DictWriter(csvFile, delimiter=",", fieldnames=table_data.keys())
         writer.writeheader()
         for data in book_dict_list:
