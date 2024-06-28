@@ -1,4 +1,5 @@
-.env
+env
+.venv
 .idea
 
 /results.csv
@@ -1134,3 +1135,6 @@
 /cover_images/Young Adult - WildSwans.jpg
 /cover_images/Young Adult - WillGraysonWillGrays.jpg
 /env/
+/practice Files/OnePage_results.csv
+/practice Files/SingleBook_results.csv
+/.venv/
