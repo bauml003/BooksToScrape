@@ -36,7 +36,7 @@ env\scripts\activate
 pip install -r requirements.txt
 
 5. Run the script
-python main.py
+python MultiplePagesByCategorywithCovers.py
 
 6. Review the outputs of the program from the folder titled 'results' 
 7. Consult the folder titled cover_images for copies of the downloaded images 
