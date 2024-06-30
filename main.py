@@ -169,7 +169,7 @@ for cat in cat1:
                         table_data['category'] = category2
 
                 # #clean the title
-                clean_book_title = re.sub("[^A-Z]", "", book_title, 0, re.IGNORECASE)
+                clean_book_title = re.sub("[^a-zA-Z0-9_]", "", book_title, 0, re.IGNORECASE)
                 clean_book_title = clean_book_title[:20]
 
                 # download the image file for the image
@@ -201,4 +201,4 @@ for cat in cat1:
 
 final_time = int(time.time())-int(start_time)
 
-print(f'The requested scrape is now complete and output to <location> after {final_time} seconds')
+print(f'The requested scrape is now complete and output after {final_time} seconds')
