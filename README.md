@@ -48,7 +48,7 @@ To run this program, the user must have Python installed on their machine.
 
 5. Run the script by calling the following in the console: 
     ```
-   python MultiplePagesByCategorywithCovers.py
+   python main.py
     ```
 
 6. Review the outputs of the program from the folder titled 'results' 
