@@ -36,11 +36,11 @@ To run this program, the user must have Python installed on their machine.
     python -m venv env
     ```
 
-   3. Activate the virtual environment in terminal (depending on operating system):
-       ```
-       env\scripts\activate       (windows)
-      .venv/bin/activate         (Mac/Linux)
-      ```
+3. Activate the virtual environment in terminal (depending on operating system):
+    ```
+    env\scripts\activate       (windows)
+   .venv/bin/activate         (Mac/Linux)
+   ```
 
 4. Install the required packages
     ```
@@ -52,6 +52,8 @@ To run this program, the user must have Python installed on their machine.
    python main.py
     ```
 
-6. Review the outputs of the program from the folder titled 'results.' 
-7. Consult the folder titled cover_images for copies of the downloaded images. 
+6. Review the outputs of the program from the folder titled 'results.'
+   - Find the results organized by category (example: Mystery.csv) 
+7. Consult the folder titled cover_images for copies of the downloaded images.
+   - The folder is organized by category and book title (example: "Mystery - )
 
