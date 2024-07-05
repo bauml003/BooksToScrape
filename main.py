@@ -19,6 +19,10 @@ import time
 import re
 import csv
 
+def cleanup(clean):
+    clean_string = re.sub("[^a-zA-Z0-9_ ]", "", clean, 0, re.IGNORECASE)[:20]
+    return clean_string
+
 start_time = time.time()
 
 # Give the user a message
@@ -101,7 +105,7 @@ for cat in cat1:
                 book_soup = BeautifulSoup(requests.get(book_url_full).text, "html.parser")
 
                 # Extract the book title
-                book_title = book_soup.find("h1").text
+                book_title = cleanup(book_soup.find("h1").text)
                 table_data['book_title'] = book_title
 
                 # find the table of data on the book page
@@ -125,6 +129,7 @@ for cat in cat1:
                     else:
                         value_item = Information_Table.select('td')[n].text
                         value_item = value_item.replace("In stock (", "").replace(" available)", "")
+                        value_item = cleanup(value_item)
                         table_data[label_itm.text] = value_item
                         n += 1
 
@@ -139,8 +144,8 @@ for cat in cat1:
                 for product_description in book_soup.find_all("p"):
                     if len(product_description.text) > 60:
                         product_description = product_description.text
+                        product_description = cleanup(product_description)
                         table_data['product_description'] = product_description
-                        break
                     else:
                         table_data['product_description'] = product_description
 
@@ -166,11 +171,11 @@ for cat in cat1:
                 for category in book_soup.find_all('ul', class_='breadcrumb'):
                     for li in category.find_all("a"):
                         category2 = li.text
+                        category2 = cleanup(category2)
                         table_data['category'] = category2
 
                 # #clean the title
-                clean_book_title = re.sub("[^a-zA-Z0-9_]", "", book_title, 0, re.IGNORECASE)
-                clean_book_title = clean_book_title[:20]
+                clean_book_title = cleanup(book_title)
 
                 # download the image file for the image
                 image_title = f'cover_images/{category2} - {clean_book_title}.jpg'
@@ -202,3 +207,4 @@ for cat in cat1:
 final_time = int(time.time())-int(start_time)
 
 print(f'The requested scrape is now complete and output after {final_time} seconds')
+
