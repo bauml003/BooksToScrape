@@ -20,7 +20,7 @@ import re
 import csv
 
 def cleanup(clean):
-    clean_string = re.sub("[^a-zA-Z0-9_ ]", "", clean, 0, re.IGNORECASE)[:20]
+    clean_string = re.sub("[^a-zA-Z0-9_ ]", "", clean, 0, re.IGNORECASE)[:50]
     return clean_string
 
 start_time = time.time()
